@@ -78,18 +78,19 @@ namespace Project4 {
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(135, 23);
 			this->button1->TabIndex = 1;
-			this->button1->Text = L"Вывод с эксель";
+			this->button1->Text = L"Вывод первой строки";
 			this->button1->UseVisualStyleBackColor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(599, 157);
+			this->button2->Location = System::Drawing::Point(599, 158);
 			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(75, 23);
+			this->button2->Size = System::Drawing::Size(135, 23);
 			this->button2->TabIndex = 2;
-			this->button2->Text = L"button2";
+			this->button2->Text = L"Вывод всех строк";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
 			// 
 			// label1
 			// 
@@ -178,5 +179,23 @@ namespace Project4 {
 	conn->Close();
 
 	}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	String^ filePath = "file.xlsx";
+	String^ connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 12.0 Xml;HDR=YES;'";
+	OleDbConnection^ conn = gcnew OleDbConnection(connString);
+	conn->Open();
+	OleDbCommand^ cmd = gcnew OleDbCommand("SELECT * FROM [list$A:H]", conn);
+	OleDbDataAdapter^ adapter = gcnew OleDbDataAdapter(cmd);
+	DataTable^ dt = gcnew DataTable();
+	adapter->Fill(dt); // Заполнение DataTable данными из Excel
+	dataGridView1->Columns->Clear();
+
+	// Присвоение DataTable DataGridView
+	dataGridView1->DataSource = dt;
+
+
+	// Закрытие соединения с базой данных
+	conn->Close();
+}
 };
 }
