@@ -42,6 +42,12 @@ namespace Project4 {
 
 
 	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::Button^ button3;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Фамилия;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Имя;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Возраст;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Пол;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Группа;
 
 
 		   /// <summary>
@@ -61,12 +67,22 @@ namespace Project4 {
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->Фамилия = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Имя = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Возраст = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Пол = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Группа = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// dataGridView1
 			// 
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(5) {
+				this->Фамилия,
+					this->Имя, this->Возраст, this->Пол, this->Группа
+			});
 			this->dataGridView1->Location = System::Drawing::Point(12, 27);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->Size = System::Drawing::Size(544, 285);
@@ -108,11 +124,47 @@ namespace Project4 {
 			this->textBox1->Size = System::Drawing::Size(100, 20);
 			this->textBox1->TabIndex = 4;
 			// 
+			// button3
+			// 
+			this->button3->Location = System::Drawing::Point(599, 201);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(135, 23);
+			this->button3->TabIndex = 5;
+			this->button3->Text = L"Отправить в Эксель";
+			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
+			// 
+			// Фамилия
+			// 
+			this->Фамилия->HeaderText = L"Фамилия";
+			this->Фамилия->Name = L"Фамилия";
+			// 
+			// Имя
+			// 
+			this->Имя->HeaderText = L"Имя";
+			this->Имя->Name = L"Имя";
+			// 
+			// Возраст
+			// 
+			this->Возраст->HeaderText = L"Возраст";
+			this->Возраст->Name = L"Возраст";
+			// 
+			// Пол
+			// 
+			this->Пол->HeaderText = L"Пол";
+			this->Пол->Name = L"Пол";
+			// 
+			// Группа
+			// 
+			this->Группа->HeaderText = L"Группа";
+			this->Группа->Name = L"Группа";
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(746, 341);
+			this->Controls->Add(this->button3);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->button2);
@@ -138,7 +190,8 @@ namespace Project4 {
 		OleDbConnection^ conn = gcnew OleDbConnection(connString);
 		conn->Open();
 		OleDbCommand^ cmd = gcnew OleDbCommand("SELECT * FROM [list$A:G]", conn);
-	///	OleDbDataAdapter^ adapter = gcnew OleDbDataAdapter(cmd);
+	
+		///	OleDbDataAdapter^ adapter = gcnew OleDbDataAdapter(cmd);
 		OleDbDataReader^ reader = cmd->ExecuteReader();
 		DataTable^ dt = gcnew DataTable();
 	///	adapter->Fill(dt);
@@ -197,5 +250,42 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 	// Закрытие соединения с базой данных
 	conn->Close();
 }
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	String^ filePath = "file.xlsx";
+	String^ connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 12.0 Xml;HDR=YES;'";
+	OleDbConnection^ conn = gcnew OleDbConnection(connString);
+	conn->Open();
+	OleDbCommand^ cmd = gcnew OleDbCommand("CREATE TABLE[Sheet2](Фамилия VARCHAR, Имя VARCHAR, Возраст VARCHAR, Пол VARCHAR, Группа)", conn);
+	 
+	String^ createTableQuery = "CREATE TABLE [Sheet1] (";
+	for (int i = 0; i < dataGridView1->Columns->Count; i++) {
+		createTableQuery += "[" + dataGridView1->Columns[i]->HeaderText + "] VARCHAR, ";
+	}
+	createTableQuery = createTableQuery->Substring(0, createTableQuery->Length - 2) + ")";
+
+	OleDbCommand^ createTableCmd = gcnew OleDbCommand(createTableQuery, conn);
+	createTableCmd->ExecuteNonQuery();
+
+	// Заполняем таблицу данными
+	for (int i = 0; i < dataGridView1->Rows->Count; i++) {
+		if (dataGridView1->Rows[i]->IsNewRow) continue; // Пропускаем новую строку
+
+		String^ insertQuery = "INSERT INTO [Sheet1] VALUES (";
+		for (int j = 0; j < dataGridView1->Columns->Count; j++) {
+			insertQuery += "'" + dataGridView1->Rows[i]->Cells[j]->Value->ToString() + "', ";
+		}
+		insertQuery = insertQuery->Substring(0, insertQuery->Length - 2) + ")";
+
+		OleDbCommand^ insertCmd = gcnew OleDbCommand(insertQuery, conn);
+		insertCmd->ExecuteNonQuery();
+		
+	}
+
+	conn->Close();
+
+	 
+
+}
 };
 }
+
