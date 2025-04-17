@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Excell {
+namespace EXCELLBD {
 
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -10,6 +10,7 @@ namespace Excell {
 	using namespace System::Drawing;
 	using namespace System::Data::OleDb;
 	using namespace Microsoft;
+
 
 	/// <summary>
 	/// Сводка для MyForm
@@ -40,16 +41,11 @@ namespace Excell {
 	protected:
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::DataGridView^ dataGridView1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Фамилия;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Имя;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Возраст;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Пол;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Группа;
-
-
-
-
-
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column3;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column4;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column5;
 
 	private:
 		/// <summary>
@@ -67,81 +63,78 @@ namespace Excell {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
-			this->Фамилия = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Имя = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Возраст = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Пол = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Группа = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(44, 13);
+			this->button1->Location = System::Drawing::Point(59, 32);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(75, 23);
 			this->button1->TabIndex = 0;
-			this->button1->Text = L"Create DB";
+			this->button1->Text = L"Creat_table";
 			this->button1->UseVisualStyleBackColor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(629, 12);
+			this->button2->Location = System::Drawing::Point(240, 32);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(75, 23);
 			this->button2->TabIndex = 1;
-			this->button2->Text = L"Insert DB";
+			this->button2->Text = L"Insert_Value";
 			this->button2->UseVisualStyleBackColor = true;
-			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
 			// 
 			// dataGridView1
 			// 
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(5) {
-				this->Фамилия,
-					this->Имя, this->Возраст, this->Пол, this->Группа
+				this->Column1,
+					this->Column2, this->Column3, this->Column4, this->Column5
 			});
-			this->dataGridView1->Location = System::Drawing::Point(44, 109);
+			this->dataGridView1->Location = System::Drawing::Point(59, 102);
 			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->Size = System::Drawing::Size(592, 215);
+			this->dataGridView1->Size = System::Drawing::Size(889, 231);
 			this->dataGridView1->TabIndex = 2;
 			// 
-			// Фамилия
+			// Column1
 			// 
-			this->Фамилия->HeaderText = L"Фамилия";
-			this->Фамилия->Name = L"Фамилия";
-			this->Фамилия->Width = 150;
+			this->Column1->HeaderText = L"Фамилия";
+			this->Column1->Name = L"Column1";
+			this->Column1->Width = 200;
 			// 
-			// Имя
+			// Column2
 			// 
-			this->Имя->HeaderText = L"Имя";
-			this->Имя->Name = L"Имя";
-			this->Имя->Width = 150;
+			this->Column2->HeaderText = L"Имя";
+			this->Column2->Name = L"Column2";
+			this->Column2->Width = 200;
 			// 
-			// Возраст
+			// Column3
 			// 
-			this->Возраст->HeaderText = L"Возраст";
-			this->Возраст->Name = L"Возраст";
-			this->Возраст->Width = 50;
+			this->Column3->HeaderText = L"Пол";
+			this->Column3->Name = L"Column3";
 			// 
-			// Пол
+			// Column4
 			// 
-			this->Пол->HeaderText = L"Пол";
-			this->Пол->Name = L"Пол";
-			this->Пол->Width = 50;
+			this->Column4->HeaderText = L"Возраст";
+			this->Column4->Name = L"Column4";
 			// 
-			// Группа
+			// Column5
 			// 
-			this->Группа->HeaderText = L"Группа";
-			this->Группа->Name = L"Группа";
-			this->Группа->Width = 150;
+			this->Column5->HeaderText = L"Группа";
+			this->Column5->Name = L"Column5";
+			this->Column5->Width = 250;
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1337, 563);
+			this->ClientSize = System::Drawing::Size(1444, 593);
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
@@ -165,7 +158,6 @@ bool SheetExists(OleDbConnection^ conn, String^ sheetName) {
 				return false; // Лист не существует
 			}
 		}
-
 #pragma endregion
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 		String^ connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=file.xls;Extended Properties=\"Excel 8.0;HDR=YES;\"";
@@ -175,7 +167,7 @@ bool SheetExists(OleDbConnection^ conn, String^ sheetName) {
 		String^ sheetName = "Sheet1";
 		if (!SheetExists(conn, sheetName)) {
 			OleDbCommand^ cmd = gcnew OleDbCommand(
-				"CREATE TABLE [" + sheetName + "$] ([Фамилия] TEXT(255), [Имя] TEXT(255), [Возраст] TEXT(50))",
+				"CREATE TABLE [" + sheetName + "] ([Фамилия] TEXT(255), [Имя] TEXT(255), [Возраст] TEXT(10), [Пол] TEXT(10), [Группа] TEXT (255))",
 				conn
 			);
 			cmd->ExecuteNonQuery();
@@ -185,37 +177,11 @@ bool SheetExists(OleDbConnection^ conn, String^ sheetName) {
 			MessageBox::Show("Таблица уже существует!");
 		}
 
-		OleDbCommand^ cmd = gcnew OleDbCommand("CREATE TABLE[Sheet2](Фамилия VARCHAR, Имя VARCHAR, Возраст VARCHAR, Пол VARCHAR, Группа VARCHAR)", conn);
-		
-	
-		
-		
-		
+
+
+
 		conn->Close();
 
-
 	}
-private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-	String^ connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=file.xls;Extended Properties=\"Excel 8.0;HDR=YES;\"";
-	OleDbConnection^ conn = gcnew OleDbConnection(connString);
-	conn->Open();
-
-	for (int i = 0; i < dataGridView1->Rows->Count; i++) {
-		if (dataGridView1->Rows[i]->IsNewRow) continue; // Пропускаем новую строку
-
-		String^ insertQuery = "INSERT INTO [Sheet1] VALUES (";
-		for (int j = 0; j < dataGridView1->Columns->Count; j++) {
-			insertQuery += "'" + dataGridView1->Rows[i]->Cells[j]->Value->ToString() + "', ";
-		}
-		insertQuery = insertQuery->Substring(0, insertQuery->Length - 2) + ")";
-
-		OleDbCommand^ insertCmd = gcnew OleDbCommand(insertQuery, conn);
-		insertCmd->ExecuteNonQuery();
-
-	}
-	
-
-	conn->Close();
-}
 };
 }
