@@ -1,7 +1,6 @@
 #pragma once
 
 namespace EXCELLBD {
-
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -46,12 +45,13 @@ namespace EXCELLBD {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column3;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column4;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column5;
+	private: System::Windows::Forms::Button^ button3;
 
 	private:
 		/// <summary>
 		/// Обязательная переменная конструктора.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -68,6 +68,7 @@ namespace EXCELLBD {
 			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->button3 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -89,6 +90,7 @@ namespace EXCELLBD {
 			this->button2->TabIndex = 1;
 			this->button2->Text = L"Insert_Value";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
 			// 
 			// dataGridView1
 			// 
@@ -130,11 +132,22 @@ namespace EXCELLBD {
 			this->Column5->Name = L"Column5";
 			this->Column5->Width = 250;
 			// 
+			// button3
+			// 
+			this->button3->Location = System::Drawing::Point(371, 32);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(75, 23);
+			this->button3->TabIndex = 3;
+			this->button3->Text = L"Select from";
+			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1444, 593);
+			this->ClientSize = System::Drawing::Size(1370, 593);
+			this->Controls->Add(this->button3);
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
@@ -145,7 +158,7 @@ namespace EXCELLBD {
 
 		}
 
-bool SheetExists(OleDbConnection^ conn, String^ sheetName) {
+		bool SheetExists(OleDbConnection^ conn, String^ sheetName) {
 			try {
 				OleDbCommand^ cmd = gcnew OleDbCommand(
 					"SELECT TOP 1 * FROM [" + sheetName + "$]",
@@ -163,7 +176,6 @@ bool SheetExists(OleDbConnection^ conn, String^ sheetName) {
 		String^ connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=file.xls;Extended Properties=\"Excel 8.0;HDR=YES;\"";
 		OleDbConnection^ conn = gcnew OleDbConnection(connString);
 		conn->Open();
-
 		String^ sheetName = "Sheet1";
 		if (!SheetExists(conn, sheetName)) {
 			OleDbCommand^ cmd = gcnew OleDbCommand(
@@ -177,11 +189,32 @@ bool SheetExists(OleDbConnection^ conn, String^ sheetName) {
 			MessageBox::Show("Таблица уже существует!");
 		}
 
-
-
-
-		conn->Close();
+	conn->Close();
 
 	}
+	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		String^ connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=file.xls;Extended Properties=\"Excel 8.0;HDR=YES;\"";
+		OleDbConnection^ conn = gcnew OleDbConnection(connString);
+		conn->Open();
+		String^ sheetName = "Sheet1";
+		for each (DataGridViewRow ^ row in dataGridView1->Rows) {
+			if (!row->IsNewRow) {
+				String^ insertQuery = "INSERT INTO [Sheet1] VALUES (";
+				for each (DataGridViewCell ^ cell in row->Cells) {
+					String^ value = cell->Value == nullptr ? "" : cell->Value->ToString();
+					insertQuery += "'" + value->Replace("'", "''") + "',";
+				}
+				insertQuery = insertQuery->TrimEnd(',') + ")";
+
+				OleDbCommand^ insertCmd = gcnew OleDbCommand(insertQuery, conn);
+				insertCmd->ExecuteNonQuery();
+			}
+		}
+		conn->Close();
+		MessageBox::Show("Данные успешно экспортированы в Excel!");
+
+	}
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+}
 };
 }
